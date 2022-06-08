@@ -1,12 +1,13 @@
-import { MarkMirror, onSelectionSet, markdownActionMap, markdownNodeMenus } from "@markmirror/core"
+import { onSelectionSet, buildMarkdownActions, markdownNodeMenus } from "@markmirror/commands"
 import { h, ref, defineComponent, PropType } from 'vue'
+import { Editor } from "./Editor"
 
 export const Menubar = defineComponent({
   name: 'Menubar',
   props: {
     editor: {
       default: null,
-      type: Object as PropType<MarkMirror>,
+      type: Object as PropType<Editor>,
     },
     menus: {
       required: true,
@@ -22,6 +23,9 @@ export const Menubar = defineComponent({
       actives.value = nodes.map(node => markdownNodeMenus[node.name] || "").filter(Boolean)
     })
     editor.addExtension(updateState)
+
+    // TODO: collab history replacement
+    const markdownActionMap = buildMarkdownActions(true)
 
     return () => {
       let children = menus.map(k => {
