@@ -6,6 +6,7 @@ import {
   onBeforeUnmount,
   defineComponent,
   PropType,
+  nextTick,
 } from 'vue'
 
 
@@ -14,7 +15,7 @@ export const EditorContent = defineComponent({
   emits: ['update:modelValue'],
   props: {
     editor: {
-      default: null,
+      required: true,
       type: Object as PropType<MarkMirror>,
     },
     modelValue: {
@@ -24,25 +25,27 @@ export const EditorContent = defineComponent({
   },
 
   setup (props, ctx) {
+    const { editor, modelValue } = props
     const root = ref<HTMLElement | null>(null)
 
     const emitContent = onDocChange(content => {
-      console.log('content changed', content)
       ctx.emit('update:modelValue', content)
     })
 
     onMounted(() => {
-      props.editor.render(
-        root.value as HTMLElement,
-        {
-          extensions: [ emitContent ],
-          content: props.modelValue,
-        }
-      )
+      nextTick(() => {
+        editor.render(
+          root.value as HTMLElement,
+          {
+            extensions: [ emitContent ],
+            content: modelValue,
+          }
+        )
+      })
     })
 
     onBeforeUnmount(() => {
-      props.editor.destroy()
+      editor.destroy()
     })
 
     return () => h('div', { ref: root })
