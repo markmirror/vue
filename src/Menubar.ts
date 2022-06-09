@@ -2,16 +2,22 @@ import { onSelectionSet, buildMarkdownActions, markdownNodeMenus } from "@markmi
 import { h, ref, defineComponent, PropType } from 'vue'
 import { Editor } from "./Editor"
 
+interface MenuOption {
+  name: string;
+  title: string;
+}
+
 export const Menubar = defineComponent({
   name: 'Menubar',
   props: {
     editor: {
-      default: null,
+      required: true,
       type: Object as PropType<Editor>,
     },
     menus: {
       required: true,
-      type: Array as PropType<string[]>,
+      default: () => ([]),
+      type: Array as PropType<string[] | MenuOption[]>,
     },
   },
 
@@ -28,19 +34,29 @@ export const Menubar = defineComponent({
     const markdownActionMap = buildMarkdownActions(true)
 
     return () => {
-      let children = menus.map(k => {
-        if (k === '|') {
+      let children = menus.map(menu => {
+        if (menu === '|') {
           return h('span', { class: 'divider' })
         } else {
-          const icon = h('i', { class: `i-menu-${k}` })
+          let name: string, title: string
+          if (typeof menu === 'string') {
+            name = menu
+            title = menu
+          } else {
+            name = menu.name
+            title = menu.title
+          }
+          const icon = h('i', { class: `i-menu-${name}` })
           return h('button', {
-            'data-menu': k,
+            'title': title,
+            'aria-label': title,
+            'data-menu': name,
             'class': {
-              active: actives.value.indexOf(k) !== -1,
+              active: actives.value.indexOf(name) !== -1,
             },
             type: 'button',
             onClick: () => {
-              const fn = markdownActionMap[k]
+              const fn = markdownActionMap[name]
               if (fn && editor.view) {
                 editor.view.focus()
                 fn(editor.view)
