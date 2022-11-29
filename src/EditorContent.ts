@@ -1,4 +1,3 @@
-import { MarkMirror, onDocChange } from '@markmirror/core'
 import {
   h,
   ref,
@@ -8,6 +7,7 @@ import {
   PropType,
   nextTick,
 } from 'vue'
+import { Editor } from './Editor'
 
 
 export const EditorContent = defineComponent({
@@ -16,7 +16,7 @@ export const EditorContent = defineComponent({
   props: {
     editor: {
       required: true,
-      type: Object as PropType<MarkMirror>,
+      type: Object as PropType<Editor>,
     },
     modelValue: {
       default: '',
@@ -26,20 +26,17 @@ export const EditorContent = defineComponent({
 
   setup (props, ctx) {
     const { editor, modelValue } = props
-    const root = ref<HTMLElement | null>(null)
-
-    const emitContent = onDocChange(content => {
+    editor.on('docChanged', content => {
       ctx.emit('update:modelValue', content)
     })
 
+    const root = ref<HTMLElement | null>(null)
     onMounted(() => {
+      // delay render timing
       nextTick(() => {
         editor.render(
           root.value as HTMLElement,
-          {
-            extensions: [ emitContent ],
-            content: modelValue,
-          }
+          { content: modelValue }
         )
       })
     })

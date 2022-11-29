@@ -1,6 +1,6 @@
 {
   "name": "@markmirror/vue",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Vue components for MarkMirror editor",
   "author": {
     "name": "Hsiaoming Yang",
@@ -22,7 +22,7 @@
     "vue": "^3.2.0"
   },
   "dependencies": {
-    "@markmirror/commands": "^0.2.0",
-    "@markmirror/core": "^0.2.0"
+    "@markmirror/commands": "^0.3.0",
+    "@markmirror/core": "^0.3.0"
   }
 }
