@@ -28,7 +28,7 @@ export const Menubar = defineComponent({
     const updateState = onSelectionSet(nodes => {
       actives.value = nodes.map(node => markdownNodeMenus[node.name] || "").filter(Boolean)
     })
-    editor.addExtension(updateState)
+    editor.use(() => updateState)
 
     // TODO: collab history replacement
     const markdownActionMap = buildMarkdownActions(true)

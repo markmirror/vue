@@ -7,6 +7,7 @@ import {
   PropType,
   nextTick,
 } from 'vue'
+import { placeholder } from '@codemirror/view'
 import { Editor } from './Editor'
 
 
@@ -22,11 +23,19 @@ export const EditorContent = defineComponent({
       default: '',
       type: String as PropType<string>,
     },
+    placeholder: {
+      default: '',
+      type: String as PropType<string>,
+    },
   },
 
   setup (props, ctx) {
-    const { editor, modelValue } = props
-    editor.on('docChanged', content => {
+    const { editor, modelValue, placeholder: _ptext } = props
+    if (_ptext) {
+      editor.use(() => placeholder(_ptext))
+    }
+
+    editor.addEventHandler('docChanged', content => {
       ctx.emit('update:modelValue', content)
     })
 
@@ -36,7 +45,7 @@ export const EditorContent = defineComponent({
       nextTick(() => {
         editor.render(
           root.value as HTMLElement,
-          { content: modelValue }
+          modelValue
         )
       })
     })
