@@ -1,5 +1,6 @@
 import { onSelectionSet, buildMarkdownActions, markdownNodeMenus } from "@markmirror/commands"
-import { h, ref, defineComponent, PropType } from 'vue'
+import { h, ref, defineComponent } from "vue"
+import type { PropType } from "vue"
 import { Editor } from "./Editor"
 
 interface MenuOption {
