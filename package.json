@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@codemirror/view": "^6.0.0",
+    "@codemirror/state": "^6.0.0",
     "@markmirror/commands": "^0.3.0",
     "@markmirror/core": "^0.3.0"
   }
